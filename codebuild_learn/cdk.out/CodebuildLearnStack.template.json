@@ -1,0 +1,225 @@
+{
+ "Resources": {
+  "GitHubCredentials909F3ACB": {
+   "Type": "AWS::CodeBuild::SourceCredential",
+   "Properties": {
+    "AuthType": "PERSONAL_ACCESS_TOKEN",
+    "ServerType": "GITHUB",
+    "Token": {
+     "Fn::Join": [
+      "",
+      [
+       "{{resolve:secretsmanager:arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":secretsmanager:ap-northeast-1:783764605802:secret:github-oauth-token:SecretString:::}}"
+      ]
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CodebuildLearnStack/GitHubCredentials/Resource"
+   }
+  },
+  "MiskoCodeBuildProjectRole2C67B9E2": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "codebuild.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CodebuildLearnStack/MiskoCodeBuildProject/Role/Resource"
+   }
+  },
+  "MiskoCodeBuildProjectRoleDefaultPolicy7AA3B346": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": [
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":logs:ap-northeast-1:783764605802:log-group:/aws/codebuild/",
+           {
+            "Ref": "MiskoCodeBuildProject989D15AC"
+           }
+          ]
+         ]
+        },
+        {
+         "Fn::Join": [
+          "",
+          [
+           "arn:",
+           {
+            "Ref": "AWS::Partition"
+           },
+           ":logs:ap-northeast-1:783764605802:log-group:/aws/codebuild/",
+           {
+            "Ref": "MiskoCodeBuildProject989D15AC"
+           },
+           ":*"
+          ]
+         ]
+        }
+       ]
+      },
+      {
+       "Action": [
+        "codebuild:CreateReportGroup",
+        "codebuild:CreateReport",
+        "codebuild:UpdateReport",
+        "codebuild:BatchPutTestCases",
+        "codebuild:BatchPutCodeCoverages"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":codebuild:ap-northeast-1:783764605802:report-group/",
+          {
+           "Ref": "MiskoCodeBuildProject989D15AC"
+          },
+          "-*"
+         ]
+        ]
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "MiskoCodeBuildProjectRoleDefaultPolicy7AA3B346",
+    "Roles": [
+     {
+      "Ref": "MiskoCodeBuildProjectRole2C67B9E2"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "CodebuildLearnStack/MiskoCodeBuildProject/Role/DefaultPolicy/Resource"
+   }
+  },
+  "MiskoCodeBuildProject989D15AC": {
+   "Type": "AWS::CodeBuild::Project",
+   "Properties": {
+    "Artifacts": {
+     "Type": "NO_ARTIFACTS"
+    },
+    "Cache": {
+     "Type": "NO_CACHE"
+    },
+    "EncryptionKey": "alias/aws/s3",
+    "Environment": {
+     "ComputeType": "BUILD_GENERAL1_SMALL",
+     "Image": "aws/codebuild/amazonlinux2-x86_64-standard:4.0",
+     "ImagePullCredentialsType": "CODEBUILD",
+     "PrivilegedMode": false,
+     "Type": "LINUX_CONTAINER"
+    },
+    "Name": "misko-codebuild-project",
+    "ServiceRole": {
+     "Fn::GetAtt": [
+      "MiskoCodeBuildProjectRole2C67B9E2",
+      "Arn"
+     ]
+    },
+    "Source": {
+     "BuildSpec": "buildspec.yml",
+     "Location": "https://github.com/M0025/learn_aws.git",
+     "ReportBuildStatus": true,
+     "Type": "GITHUB"
+    },
+    "Triggers": {
+     "FilterGroups": [
+      [
+       {
+        "Pattern": "PUSH, PULL_REQUEST_MERGED",
+        "Type": "EVENT"
+       },
+       {
+        "Pattern": "refs/heads/main",
+        "Type": "HEAD_REF"
+       }
+      ]
+     ],
+     "Webhook": true
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "CodebuildLearnStack/MiskoCodeBuildProject/Resource"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/12Myw6CMBREv4V9ubaYGPcsdEngA0xpr/FCoUkfMaTpvwvVlauZnDOZBsSVA6/k29dKz7WhEdIQpJpZj95Gp5Dt7pGU1ThGMhrSjcI9jkORrUONayBpPGuf6z9knbMTqnC4X82M5AKptwYPWrKzhtRWRqXlnFm3hZddT2cQHMSlmjxR7eL+uiD03/wAAxMSeb0AAAA="
+   },
+   "Metadata": {
+    "aws:cdk:path": "CodebuildLearnStack/CDKMetadata/Default"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

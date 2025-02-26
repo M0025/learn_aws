@@ -1,0 +1,325 @@
+{
+  "version": "tree-0.1",
+  "tree": {
+    "id": "App",
+    "path": "",
+    "children": {
+      "CodebuildLearnStack": {
+        "id": "CodebuildLearnStack",
+        "path": "CodebuildLearnStack",
+        "children": {
+          "GithubToken": {
+            "id": "GithubToken",
+            "path": "CodebuildLearnStack/GithubToken",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.Resource",
+              "version": "2.180.0",
+              "metadata": []
+            }
+          },
+          "GitHubCredentials": {
+            "id": "GitHubCredentials",
+            "path": "CodebuildLearnStack/GitHubCredentials",
+            "children": {
+              "Resource": {
+                "id": "Resource",
+                "path": "CodebuildLearnStack/GitHubCredentials/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CodeBuild::SourceCredential",
+                  "aws:cdk:cloudformation:props": {
+                    "authType": "PERSONAL_ACCESS_TOKEN",
+                    "serverType": "GITHUB",
+                    "token": {
+                      "Fn::Join": [
+                        "",
+                        [
+                          "{{resolve:secretsmanager:arn:",
+                          {
+                            "Ref": "AWS::Partition"
+                          },
+                          ":secretsmanager:ap-northeast-1:783764605802:secret:github-oauth-token:SecretString:::}}"
+                        ]
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_codebuild.CfnSourceCredential",
+                  "version": "2.180.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_codebuild.GitHubSourceCredentials",
+              "version": "2.180.0",
+              "metadata": []
+            }
+          },
+          "MiskoCodeBuildProject": {
+            "id": "MiskoCodeBuildProject",
+            "path": "CodebuildLearnStack/MiskoCodeBuildProject",
+            "children": {
+              "Role": {
+                "id": "Role",
+                "path": "CodebuildLearnStack/MiskoCodeBuildProject/Role",
+                "children": {
+                  "ImportRole": {
+                    "id": "ImportRole",
+                    "path": "CodebuildLearnStack/MiskoCodeBuildProject/Role/ImportRole",
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.Resource",
+                      "version": "2.180.0",
+                      "metadata": []
+                    }
+                  },
+                  "Resource": {
+                    "id": "Resource",
+                    "path": "CodebuildLearnStack/MiskoCodeBuildProject/Role/Resource",
+                    "attributes": {
+                      "aws:cdk:cloudformation:type": "AWS::IAM::Role",
+                      "aws:cdk:cloudformation:props": {
+                        "assumeRolePolicyDocument": {
+                          "Statement": [
+                            {
+                              "Action": "sts:AssumeRole",
+                              "Effect": "Allow",
+                              "Principal": {
+                                "Service": "codebuild.amazonaws.com"
+                              }
+                            }
+                          ],
+                          "Version": "2012-10-17"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.CfnRole",
+                      "version": "2.180.0"
+                    }
+                  },
+                  "DefaultPolicy": {
+                    "id": "DefaultPolicy",
+                    "path": "CodebuildLearnStack/MiskoCodeBuildProject/Role/DefaultPolicy",
+                    "children": {
+                      "Resource": {
+                        "id": "Resource",
+                        "path": "CodebuildLearnStack/MiskoCodeBuildProject/Role/DefaultPolicy/Resource",
+                        "attributes": {
+                          "aws:cdk:cloudformation:type": "AWS::IAM::Policy",
+                          "aws:cdk:cloudformation:props": {
+                            "policyDocument": {
+                              "Statement": [
+                                {
+                                  "Action": [
+                                    "logs:CreateLogGroup",
+                                    "logs:CreateLogStream",
+                                    "logs:PutLogEvents"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": [
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":logs:ap-northeast-1:783764605802:log-group:/aws/codebuild/",
+                                          {
+                                            "Ref": "MiskoCodeBuildProject989D15AC"
+                                          }
+                                        ]
+                                      ]
+                                    },
+                                    {
+                                      "Fn::Join": [
+                                        "",
+                                        [
+                                          "arn:",
+                                          {
+                                            "Ref": "AWS::Partition"
+                                          },
+                                          ":logs:ap-northeast-1:783764605802:log-group:/aws/codebuild/",
+                                          {
+                                            "Ref": "MiskoCodeBuildProject989D15AC"
+                                          },
+                                          ":*"
+                                        ]
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "Action": [
+                                    "codebuild:CreateReportGroup",
+                                    "codebuild:CreateReport",
+                                    "codebuild:UpdateReport",
+                                    "codebuild:BatchPutTestCases",
+                                    "codebuild:BatchPutCodeCoverages"
+                                  ],
+                                  "Effect": "Allow",
+                                  "Resource": {
+                                    "Fn::Join": [
+                                      "",
+                                      [
+                                        "arn:",
+                                        {
+                                          "Ref": "AWS::Partition"
+                                        },
+                                        ":codebuild:ap-northeast-1:783764605802:report-group/",
+                                        {
+                                          "Ref": "MiskoCodeBuildProject989D15AC"
+                                        },
+                                        "-*"
+                                      ]
+                                    ]
+                                  }
+                                }
+                              ],
+                              "Version": "2012-10-17"
+                            },
+                            "policyName": "MiskoCodeBuildProjectRoleDefaultPolicy7AA3B346",
+                            "roles": [
+                              {
+                                "Ref": "MiskoCodeBuildProjectRole2C67B9E2"
+                              }
+                            ]
+                          }
+                        },
+                        "constructInfo": {
+                          "fqn": "aws-cdk-lib.aws_iam.CfnPolicy",
+                          "version": "2.180.0"
+                        }
+                      }
+                    },
+                    "constructInfo": {
+                      "fqn": "aws-cdk-lib.aws_iam.Policy",
+                      "version": "2.180.0",
+                      "metadata": []
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_iam.Role",
+                  "version": "2.180.0",
+                  "metadata": []
+                }
+              },
+              "Resource": {
+                "id": "Resource",
+                "path": "CodebuildLearnStack/MiskoCodeBuildProject/Resource",
+                "attributes": {
+                  "aws:cdk:cloudformation:type": "AWS::CodeBuild::Project",
+                  "aws:cdk:cloudformation:props": {
+                    "artifacts": {
+                      "type": "NO_ARTIFACTS"
+                    },
+                    "cache": {
+                      "type": "NO_CACHE"
+                    },
+                    "encryptionKey": "alias/aws/s3",
+                    "environment": {
+                      "type": "LINUX_CONTAINER",
+                      "image": "aws/codebuild/amazonlinux2-x86_64-standard:4.0",
+                      "imagePullCredentialsType": "CODEBUILD",
+                      "privilegedMode": false,
+                      "computeType": "BUILD_GENERAL1_SMALL"
+                    },
+                    "name": "misko-codebuild-project",
+                    "serviceRole": {
+                      "Fn::GetAtt": [
+                        "MiskoCodeBuildProjectRole2C67B9E2",
+                        "Arn"
+                      ]
+                    },
+                    "source": {
+                      "type": "GITHUB",
+                      "reportBuildStatus": true,
+                      "location": "https://github.com/M0025/learn_aws.git",
+                      "buildSpec": "buildspec.yml"
+                    },
+                    "triggers": {
+                      "webhook": true,
+                      "filterGroups": [
+                        [
+                          {
+                            "type": "EVENT",
+                            "pattern": "PUSH, PULL_REQUEST_MERGED"
+                          },
+                          {
+                            "type": "HEAD_REF",
+                            "pattern": "refs/heads/main"
+                          }
+                        ]
+                      ]
+                    }
+                  }
+                },
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.aws_codebuild.CfnProject",
+                  "version": "2.180.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.aws_codebuild.Project",
+              "version": "2.180.0",
+              "metadata": []
+            }
+          },
+          "CDKMetadata": {
+            "id": "CDKMetadata",
+            "path": "CodebuildLearnStack/CDKMetadata",
+            "children": {
+              "Default": {
+                "id": "Default",
+                "path": "CodebuildLearnStack/CDKMetadata/Default",
+                "constructInfo": {
+                  "fqn": "aws-cdk-lib.CfnResource",
+                  "version": "2.180.0"
+                }
+              }
+            },
+            "constructInfo": {
+              "fqn": "constructs.Construct",
+              "version": "10.4.2"
+            }
+          },
+          "BootstrapVersion": {
+            "id": "BootstrapVersion",
+            "path": "CodebuildLearnStack/BootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnParameter",
+              "version": "2.180.0"
+            }
+          },
+          "CheckBootstrapVersion": {
+            "id": "CheckBootstrapVersion",
+            "path": "CodebuildLearnStack/CheckBootstrapVersion",
+            "constructInfo": {
+              "fqn": "aws-cdk-lib.CfnRule",
+              "version": "2.180.0"
+            }
+          }
+        },
+        "constructInfo": {
+          "fqn": "aws-cdk-lib.Stack",
+          "version": "2.180.0"
+        }
+      },
+      "Tree": {
+        "id": "Tree",
+        "path": "Tree",
+        "constructInfo": {
+          "fqn": "constructs.Construct",
+          "version": "10.4.2"
+        }
+      }
+    },
+    "constructInfo": {
+      "fqn": "aws-cdk-lib.App",
+      "version": "2.180.0"
+    }
+  }
+}

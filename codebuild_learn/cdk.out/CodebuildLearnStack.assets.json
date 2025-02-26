@@ -1,0 +1,20 @@
+{
+  "version": "39.0.0",
+  "files": {
+    "23becb3c17c00f366d4ef3151f50c8e182afe6bb9e767dae1cff3d69b3fd23e9": {
+      "source": {
+        "path": "CodebuildLearnStack.template.json",
+        "packaging": "file"
+      },
+      "destinations": {
+        "783764605802-ap-northeast-1": {
+          "bucketName": "cdk-hnb659fds-assets-783764605802-ap-northeast-1",
+          "objectKey": "23becb3c17c00f366d4ef3151f50c8e182afe6bb9e767dae1cff3d69b3fd23e9.json",
+          "region": "ap-northeast-1",
+          "assumeRoleArn": "arn:${AWS::Partition}:iam::783764605802:role/cdk-hnb659fds-file-publishing-role-783764605802-ap-northeast-1"
+        }
+      }
+    }
+  },
+  "dockerImages": {}
+}

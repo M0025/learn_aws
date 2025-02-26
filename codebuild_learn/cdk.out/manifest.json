@@ -1,0 +1,89 @@
+{
+  "version": "39.0.0",
+  "artifacts": {
+    "CodebuildLearnStack.assets": {
+      "type": "cdk:asset-manifest",
+      "properties": {
+        "file": "CodebuildLearnStack.assets.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+      }
+    },
+    "CodebuildLearnStack": {
+      "type": "aws:cloudformation:stack",
+      "environment": "aws://783764605802/ap-northeast-1",
+      "properties": {
+        "templateFile": "CodebuildLearnStack.template.json",
+        "terminationProtection": false,
+        "validateOnSynth": false,
+        "assumeRoleArn": "arn:${AWS::Partition}:iam::783764605802:role/cdk-hnb659fds-deploy-role-783764605802-ap-northeast-1",
+        "cloudFormationExecutionRoleArn": "arn:${AWS::Partition}:iam::783764605802:role/cdk-hnb659fds-cfn-exec-role-783764605802-ap-northeast-1",
+        "stackTemplateAssetObjectUrl": "s3://cdk-hnb659fds-assets-783764605802-ap-northeast-1/23becb3c17c00f366d4ef3151f50c8e182afe6bb9e767dae1cff3d69b3fd23e9.json",
+        "requiresBootstrapStackVersion": 6,
+        "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version",
+        "additionalDependencies": [
+          "CodebuildLearnStack.assets"
+        ],
+        "lookupRole": {
+          "arn": "arn:${AWS::Partition}:iam::783764605802:role/cdk-hnb659fds-lookup-role-783764605802-ap-northeast-1",
+          "requiresBootstrapStackVersion": 8,
+          "bootstrapStackVersionSsmParameter": "/cdk-bootstrap/hnb659fds/version"
+        }
+      },
+      "dependencies": [
+        "CodebuildLearnStack.assets"
+      ],
+      "metadata": {
+        "/CodebuildLearnStack/GitHubCredentials/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "GitHubCredentials909F3ACB"
+          }
+        ],
+        "/CodebuildLearnStack/MiskoCodeBuildProject/Role/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MiskoCodeBuildProjectRole2C67B9E2"
+          }
+        ],
+        "/CodebuildLearnStack/MiskoCodeBuildProject/Role/DefaultPolicy/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MiskoCodeBuildProjectRoleDefaultPolicy7AA3B346"
+          }
+        ],
+        "/CodebuildLearnStack/MiskoCodeBuildProject/Resource": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "MiskoCodeBuildProject989D15AC"
+          }
+        ],
+        "/CodebuildLearnStack/CDKMetadata/Default": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CDKMetadata"
+          }
+        ],
+        "/CodebuildLearnStack/BootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "BootstrapVersion"
+          }
+        ],
+        "/CodebuildLearnStack/CheckBootstrapVersion": [
+          {
+            "type": "aws:cdk:logicalId",
+            "data": "CheckBootstrapVersion"
+          }
+        ]
+      },
+      "displayName": "CodebuildLearnStack"
+    },
+    "Tree": {
+      "type": "cdk:tree",
+      "properties": {
+        "file": "tree.json"
+      }
+    }
+  }
+}
